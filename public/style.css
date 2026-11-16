@@ -1,0 +1,21 @@
+* { box-sizing: border-box }
+body { margin: 0; font-family: "Segoe UI", sans-serif; background: #eef4f2; color: #142c2a }
+header { background: #103d38; color: #fff; padding: 2.5rem max(5vw, calc((100vw - 1160px)/2)); display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap }
+header p { color: #b3d4cd; margin: 0 0 .5rem }
+h1 { font-size: clamp(2rem, 5vw, 3.8rem); margin: 0 }
+main { width: min(90%,1160px); margin: 1.5rem auto 3rem }
+article, form, .filters { background: white; border: 1px solid #d5e2dd; border-radius: 16px; padding: 1.25rem }
+form, .filters { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap }
+label { display: grid; gap: .35rem; font-weight: 600 }
+button, input, select { font: inherit; padding: .55rem .75rem; border: 1px solid #9db7b0; border-radius: 7px; color: inherit; background: white }
+button { background: #126452; color: white; cursor: pointer }
+.cards, .charts { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 1rem; margin: 1rem 0 }
+h2 { font-size: 1rem; margin: 0 0 .55rem }
+strong { font-size: 2.5rem; font-variant-numeric: tabular-nums }
+#map { height: 440px; border-radius: 10px; background: #dbe9e5 }
+#map-caption { color: #43615a; font-size: .9rem }
+.chart { display: grid; gap: .55rem; max-height: 380px; overflow: auto }
+.bar-row { display: grid; grid-template-columns: minmax(6rem,1fr) 1.3fr auto; gap: .5rem; align-items: center; font-size: .85rem }
+.bar-row span { overflow-wrap: anywhere }
+progress { appearance: none; width: 100%; height: .62rem; accent-color: #126452 }
+[hidden] { display: none !important }
