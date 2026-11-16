@@ -12,7 +12,7 @@ button { background: #126452; color: white; cursor: pointer }
 .cards, .charts { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: 1rem; margin: 1rem 0 }
 h2 { font-size: 1rem; margin: 0 0 .55rem }
 strong { font-size: 2.5rem; font-variant-numeric: tabular-nums }
-#map { height: 440px; border-radius: 10px; background: #dbe9e5 }
+#map { position: relative; isolation: isolate; overflow: hidden; height: 440px; border-radius: 10px; background: #dbe9e5 }
 #map-caption { color: #43615a; font-size: .9rem }
 .chart { display: grid; gap: .55rem; max-height: 380px; overflow: auto }
 .bar-row { display: grid; grid-template-columns: minmax(6rem,1fr) 1.3fr auto; gap: .5rem; align-items: center; font-size: .85rem }
