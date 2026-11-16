@@ -11,10 +11,19 @@ const probe = process.env.PROBE_ONLY === 'true';
 let token;
 
 async function post(url, params) {
-  const response = await fetch(url, {
-    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(45000),
-    body: new URLSearchParams({ f: 'json', ...params })
-  });
+  const endpoint = new URL(url);
+  let response;
+  try {
+    response = await fetch(endpoint, {
+      method: 'POST', redirect: 'error', signal: AbortSignal.timeout(45000),
+      headers: { Referer: host },
+      body: new URLSearchParams({ f: 'json', ...params })
+    });
+  } catch (error) {
+    const code = error.cause?.code || error.name;
+    const reason = /^[A-Za-z0-9_]+$/.test(code) ? code : 'erro de rede';
+    throw new Error('ArcGIS ' + endpoint.pathname + ': ' + reason);
+  }
   if (!response.ok) throw new Error('ArcGIS HTTP ' + response.status);
   return response.json();
 }
@@ -23,7 +32,7 @@ async function authenticate() {
   const url = new URL(process.env.ARCGIS_TOKEN_URL || host + '/portal/sharing/rest/generateToken');
   const { ARCGIS_USERNAME: username, ARCGIS_PASSWORD: password } = process.env;
   if (url.origin !== host || !username || !password) throw new Error('Configuração ArcGIS inválida');
-  const result = await post(url, { username, password, client: 'requestip', expiration: 60 });
+  const result = await post(url, { username, password, client: 'referer', referer: host, expiration: 60 });
   if (!result.token) throw new Error('Autenticação ArcGIS recusada (' + Number(result.error?.code) + ')');
   token = result.token;
 }
