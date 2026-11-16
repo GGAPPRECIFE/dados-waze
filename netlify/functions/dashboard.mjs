@@ -39,7 +39,9 @@ export default async function dashboard(request) {
       ['SELECT DISTINCT type FROM events WHERE ' + baseWhere + ' ORDER BY type LIMIT 100', baseArgs]
     ]);
     return reply({ cards, series, types, map, last: runs[0]?.last, options });
-  } catch {
-    return reply({ error: 'Histórico indisponível. Confira a configuração e a primeira coleta.' }, 503);
+  } catch (error) {
+    const safe = /^(Configuração Turso (ausente|inválida)|Turso HTTP \d{3}|Falha ao executar consulta Turso( \([A-Z0-9_]+\))?)$/;
+    const detail = safe.test(error.message) ? error.message : 'falha de conexão ou resposta inválida';
+    return reply({ error: 'Histórico indisponível (' + detail + ').' }, 503);
   }
 }
