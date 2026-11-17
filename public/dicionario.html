@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dicionário de variáveis do Waze Recife</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header><div><p>Monitoramento Waze Recife</p><h1>Dicionário de variáveis</h1></div><a href="/">Voltar ao painel</a></header>
+<main class="dictionary">
+<nav class="dictionary-actions" aria-label="Exportação do dicionário"><a href="/dicionario-waze.pdf" download>Baixar PDF</a><a href="/dicionario-waze.xlsx" download>Baixar Excel (.xlsx)</a></nav>
+<p>O Turso guarda alertas e observações de trânsito na tabela `events`. Cada linha representa um registro publicado de uma das duas camadas. A mesma ocorrência ou trecho pode aparecer em horários diferentes.</p>
+<article><h2>Tabela <code>events</code></h2>
+<div class="table-scroll"><table><thead><tr><th scope="col">Variável</th><th scope="col">Tipo no Turso</th><th scope="col">Camada</th><th scope="col">Origem</th><th scope="col">Definição</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td>Texto</td><td>Ambas</td><td>Coletor</td><td>Chave de deduplicação calculada a partir da camada, do identificador da fonte e do horário de publicação. O identificador prioriza <code>UUID</code>, depois <code>GLOBALID</code> quando disponível e, por fim, <code>OBJECTID</code>.</td></tr>
+<tr><td><code>layer</code></td><td>Inteiro</td><td>Ambas</td><td>Camada ArcGIS</td><td><code>0</code> = alertas. <code>1</code> = trânsito.</td></tr>
+<tr><td><code>published</code></td><td>Inteiro</td><td>Ambas</td><td><code>PUBMILLIS</code></td><td>Data e hora de publicação na fonte, em milissegundos desde 01/01/1970 UTC. Use para análises por data e hora.</td></tr>
+<tr><td><code>type</code></td><td>Texto</td><td>Ambas</td><td><code>TYPE</code></td><td>Categoria da fonte. Exemplos observados no painel incluem <code>JAM</code> (congestionamento), <code>HAZARD</code> (perigo), <code>ACCIDENT</code> (acidente) e <code>ROAD_CLOSED</code> (via interditada). O coletor grava <code>Sem tipo</code> quando o campo vem vazio ou nulo.</td></tr>
+<tr><td><code>subtype</code></td><td>Texto ou nulo</td><td>Alertas</td><td><code>SUBTYPE</code></td><td>Detalhamento da categoria do alerta, quando informado.</td></tr>
+<tr><td><code>neighborhood</code></td><td>Texto ou nulo</td><td>Alertas</td><td><code>NMBAIRRO</code></td><td>Nome do bairro informado pela camada de alertas.</td></tr>
+<tr><td><code>level</code></td><td>Inteiro ou nulo</td><td>Trânsito</td><td><code>LEVEL</code></td><td>Código de nível informado pela fonte. O coletor conserva o valor original. A correspondência entre códigos e graus de severidade não foi validada.</td></tr>
+<tr><td><code>speed</code></td><td>Inteiro ou nulo</td><td>Trânsito</td><td><code>SPEEDKMH</code></td><td>Velocidade registrada em quilômetros por hora (km/h).</td></tr>
+<tr><td><code>geometry</code></td><td>Texto JSON ou nulo</td><td>Ambas</td><td>Geometria ArcGIS</td><td>GeoJSON sem atributos. Alertas são <code>Point</code>. Trânsito é <code>MultiLineString</code>. As coordenadas estão em WGS 84 (EPSG:4326), na ordem longitude, latitude.</td></tr>
+<tr><td><code>first_seen</code></td><td>Inteiro</td><td>Ambas</td><td>Coletor</td><td>Horário de início da primeira coleta que gravou o registro.</td></tr>
+<tr><td><code>last_seen</code></td><td>Inteiro</td><td>Ambas</td><td>Coletor</td><td>Horário de início da coleta mais recente em que o registro foi encontrado. Atualiza quando a mesma chave reaparece.</td></tr>
+</tbody></table></div>
+</article>
+<article><h2>Tabela <code>runs</code></h2>
+<div class="table-scroll"><table><thead><tr><th scope="col">Variável</th><th scope="col">Tipo no Turso</th><th scope="col">Definição</th></tr></thead><tbody>
+<tr><td><code>finished</code></td><td>Inteiro</td><td>Data e hora da conclusão de uma coleta das duas camadas, em milissegundos desde 01/01/1970 UTC.</td></tr>
+</tbody></table></div>
+</article>
+<article><h2>Uso no R</h2>
+<p>O script de download importa os campos como texto. Converta <code>layer</code>, <code>level</code> e <code>speed</code> com <code>as.integer()</code> antes de operar com eles como números.</p>
+<p>O campo <code>publicacao</code> é derivado de <code>published</code> no R. A mesma conversão se aplica a <code>first_seen</code>, <code>last_seen</code> e <code>finished</code>.</p>
+<pre><code>as.POSIXct(as.numeric(waze$published) / 1000,
+           origin = &quot;1970-01-01&quot;, tz = &quot;America/Recife&quot;)</code></pre>
+<p><code>subtype</code> e <code>neighborhood</code> ficam nulos nas linhas de trânsito. <code>level</code> e <code>speed</code> ficam nulos nas linhas de alerta. O script representa nulos como <code>NA</code>.</p>
+<p>Para contar registros por categoria, filtre ou agrupe também por <code>layer</code>. Um alerta de congestionamento e uma observação de trânsito podem descrever o mesmo trecho.</p>
+<p>O arquivo <code>waze_historico.rds</code> gerado pelo script reúne os registros de <code>events</code>. A tabela <code>runs</code> pode ser consultada separadamente para verificar os horários das coletas concluídas.</p>
+</article>
+</main>
+</body>
+</html>

@@ -2,6 +2,18 @@
 body { margin: 0; font-family: "Segoe UI", sans-serif; background: #eef4f2; color: #142c2a }
 header { background: #103d38; color: #fff; padding: 2.5rem max(5vw, calc((100vw - 1160px)/2)); display: flex; justify-content: space-between; align-items: end; gap: 1rem; flex-wrap: wrap }
 header p { color: #b3d4cd; margin: 0 0 .5rem }
+.header-links { display: flex; flex-direction: column; gap: .65rem }
+header a { color: white }
+.dictionary-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin: 0 0 1rem }
+.dictionary-actions a { background: #126452; color: white; border-radius: 7px; padding: .55rem .85rem }
+.dictionary article { margin-bottom: 1rem }
+.dictionary h2 { font-size: 1.25rem }
+.dictionary .table-scroll { overflow-x: auto }
+.dictionary table { width: 100%; border-collapse: collapse; font-size: .95rem }
+.dictionary th, .dictionary td { text-align: left; vertical-align: top; padding: .65rem; border-bottom: 1px solid #d5e2dd }
+.dictionary th { background: #e4efeb }
+.dictionary tbody tr:nth-child(even) { background: #f6faf8 }
+.dictionary pre { overflow-x: auto; background: #eef4f2; padding: .85rem }
 h1 { font-size: clamp(2rem, 5vw, 3.8rem); margin: 0 }
 main { width: min(90%,1160px); margin: 1.5rem auto 3rem }
 article, form, .filters { background: white; border: 1px solid #d5e2dd; border-radius: 16px; padding: 1.25rem }
